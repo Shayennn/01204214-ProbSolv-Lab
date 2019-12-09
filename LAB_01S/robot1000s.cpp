@@ -19,11 +19,7 @@ int main(){
     cmd_count[3] = 0;
 
     // Count cmd
-    for(int i=0; i<=100; i++){
-        if(cmd[i] == '\0'){
-            if(K>i)K=i;
-            break;
-        }
+    for(int i=0; cmd[i] != '\0'; i++){
         switch (cmd[i])
         {
         case 'N':
@@ -67,5 +63,6 @@ int main(){
         // If no cmd to reduce exit loop
         if(cmd_count[0]+cmd_count[1]+cmd_count[2]+cmd_count[3] == 0)break;
     }
-    cout << abs(cmd_count[0]-cmd_count[1]+cmd_count[2]-cmd_count[3])*2 << endl;
+    cout << (abs(cmd_count[0]-cmd_count[1])+abs(cmd_count[2]-cmd_count[3]))*2 << endl;
+    // cout << abs(cmd_count[0]-cmd_count[1]+cmd_count[2]-cmd_count[3])*2 << endl;  // 6 hours bug.
 }
