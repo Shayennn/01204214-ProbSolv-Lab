@@ -12,8 +12,6 @@ int main(){
     cin >> cmd;
     cin >> K;
 
-    if(K>100)K=100;  // Filter too much K
-
     // Init count
     cmd_count[0] = 0;
     cmd_count[1] = 0;
@@ -21,8 +19,11 @@ int main(){
     cmd_count[3] = 0;
 
     // Count cmd
-    for(int i=0; i<100; i++){
-        if(cmd[i] == '\0')break;
+    for(int i=0; i<=100; i++){
+        if(cmd[i] == '\0'){
+            if(K>i)K=i;
+            break;
+        }
         switch (cmd[i])
         {
         case 'N':
