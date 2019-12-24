@@ -5,92 +5,58 @@ using namespace std;
 
 typedef int valueType;
 
-struct TrainStation
+struct Train
 {
-  valueType platform;
   valueType trainID;
-  TrainStation* next;
+  Train* next;
 
-  TrainStation(valueType platform, valueType trainID, TrainStation* next=0)
-    : platform(platform), trainID(trainID), next(next) {}
+  Train(valueType trainID, Train* next=0)
+    : trainID(trainID), next(next) {}
 };
 
-void add_train(TrainStation* header, valueType platform, valueType trainID)
+void add_train(Train* tail, valueType trainID)
 {
-    TrainStation* p = header;
-    TrainStation* newTrain = new TrainStation(platform, trainID);
-    while (p->next != 0 && p->next->platform <= platform)
-    {
-        // cout << "[DB] BL1: T" << p->trainID << ":P" << p->platform << endl;
-        p = p->next;
-    }
-    newTrain->next = p->next;
-    p->next = newTrain;
+    tail->next->next = new Train(trainID);
+    tail->next = tail->next->next;
 }
 
-void move_train(TrainStation* header, valueType platform_src, valueType platform_dst){
-    /**
-     * _header = ptr to header
-     * so _header->next = that data
-     **/
-    if(platform_src==platform_dst)return;
-    // cout << "[DB] " << platform_src << " to " << platform_dst << endl; 
-    TrainStation* move_header = header;
-    TrainStation* move_tail_header;
-    TrainStation* tmp;
-    TrainStation* tmp2;
-
-    while(move_header->next != 0 && move_header->next->platform < platform_src){
-        move_header = move_header->next;
-        // cout << "[DB] MH: T" << move_header->trainID << ":P" << move_header->platform << endl;
+void move_train(Train* src_header, Train* src_tail, Train* dst_tail)
+{
+    dst_tail->next->next = src_header->next;
+    if(src_header->next != 0){
+        dst_tail->next = src_tail->next;
     }
-
-    if(move_header->next == 0 || move_header->next->platform != platform_src)return;
-    move_tail_header = move_header;
-
-    while(move_tail_header->next != 0 && move_tail_header->next->platform <= platform_src){
-        move_tail_header = move_tail_header->next;
-        if(move_tail_header == 0 || move_tail_header->platform != platform_src)return;
-        move_tail_header->platform = platform_dst;
-        // cout << "[DB] MT: T" << move_tail_header->trainID << ":P" << move_tail_header->platform << ":N" << move_tail_header->next << endl;
-    }
-
-    if(move_tail_header == move_header)return;
-    
-    // cout << "[DB] MH: T" << move_header->trainID << ":P" << move_header->platform << endl;
-    // cout << "[DB] MT: T" << move_tail_header->trainID << ":P" << move_tail_header->platform << endl;
-    // Code to swap pointer
-    tmp = move_header->next;
-    move_header->next = move_tail_header->next;
-    move_tail_header->next = 0;
-    while(tmp != 0){
-        add_train(header, platform_dst, tmp->trainID);
-        tmp2=tmp;
-        // cout << "[DB] Reinsert TrainID: " << tmp->trainID << endl;
-        tmp = tmp->next;
-        delete tmp2;
-    }
+    src_header->next = 0;
+    src_tail->next = src_header;
 }
 
 int main()
 {
-    TrainStation* header = new TrainStation(0, 0);
-    header->next = 0;
+    Train* headers[100000];
+    Train* tails[100000];
+    for(int i = 0; i<100000; i++){
+        headers[i] = new Train(0);
+        tails[i] = new Train(0, headers[i]);
+    }
     int M, X, Y;
     char cmd;
     cin >> M;
     for(int i = 0; i<M; i++){
         cin >> cmd >> X >> Y;
+        // cout << "[DB] [CMD] " << cmd << " " << X << " " << Y << endl;
         if(cmd == 'N'){
-            add_train(header, Y, X);
+            add_train(tails[Y-1], X);
         }else
         {
-            move_train(header, X, Y);
+            move_train(headers[X-1], tails[X-1], tails[Y-1]);
         }
+        
     }
-    while(header->next != 0){
-        cout << header->next->trainID << endl;
-        // cout << "[DB] T" << header->next->trainID << ":P" << header->next->platform << endl;
-        header = header->next;
+    for(int i = 0; i<100000; i++){
+        while (headers[i]->next != 0)
+        {
+            headers[i] = headers[i]->next;
+            cout << headers[i]->trainID << endl;
+        }
     }
 }
