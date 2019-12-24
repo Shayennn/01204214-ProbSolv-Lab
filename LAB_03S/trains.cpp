@@ -1,7 +1,8 @@
-#include <iostream>
-#include <cstdlib>
+// #include <iostream>
+#include <stdio.h>
+// #include <cstdlib>
 
-using namespace std;
+// using namespace std;
 
 typedef int valueType;
 
@@ -40,10 +41,13 @@ int main()
     }
     int M, X, Y;
     char cmd;
-    cin >> M;
+    scanf("%d", &M);
+    // cin >> M;
     for(int i = 0; i<M; i++){
-        cin >> cmd >> X >> Y;
+        scanf("\n%c %d %d", &cmd, &X, &Y);
+        // cin >> cmd >> X >> Y;
         // cout << "[DB] [CMD] " << cmd << " " << X << " " << Y << endl;
+        // printf("OK I know. CMD:%c %d %d\n", cmd, X, Y);
         if(cmd == 'N'){
             add_train(tails[Y-1], X);
         }else
@@ -56,7 +60,9 @@ int main()
         while (headers[i]->next != 0)
         {
             headers[i] = headers[i]->next;
-            cout << headers[i]->trainID << endl;
+            printf("%d\n", headers[i]->trainID);
+            // cout << headers[i]->trainID << endl;
         }
     }
+    return 0;
 }
