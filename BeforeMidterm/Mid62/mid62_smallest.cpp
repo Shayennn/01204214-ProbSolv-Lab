@@ -14,6 +14,10 @@ int mins[200001];
 int FUCK_min = 1000000000;
 int FUCK_max = 0;
 
+int o_count = 0;
+
+list<Cond>::iterator conds_helper[10000000];
+
 list<Cond> conds;
 
 int main(){
@@ -33,6 +37,15 @@ int main(){
         mins[i]=FUCK_min;
     }
     list<Cond>::iterator it;
+    for(int i=FUCK_min; i<=FUCK_min+100; i+=100){
+        for (it = conds.begin(); it != conds.end(); ++it)
+        {
+            conds_helper[i/100] = it;
+            if(i > it->value){
+                break;
+            }
+        }
+    }
     for (int i = 0; i < Q; i++)
     {
         scanf("%d %d", &T, &k);
@@ -42,8 +55,10 @@ int main(){
             if(k > students[0])printf("0\n");
             else if(k <= FUCK_min)printf("%d\n", N);
             else{
-                for (it = conds.begin(); it != conds.end(); ++it)
+                for (it = conds_helper[k/100]; it != conds.end(); ++it)
+                // for (it = conds.begin(); it != conds.end(); ++it)
                 {
+                    o_count++;
                     if(k > it->value){
                         printf("%d\n", it->index);
                         break;
@@ -52,6 +67,7 @@ int main(){
                 
             }
         }
+        // printf("\n\nO: %d\n", o_count);
     }
     
     
